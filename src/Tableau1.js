@@ -588,6 +588,21 @@ class Tableau1 extends Phaser.Scene
                 repeat: -1
             });
             this.filterSnow.play('snow');
+            this.filterSnow.visible=false
+        this.filterRain = this.add.sprite(0, 0, 'filterRain1').setOrigin(0, 0);
+        //animation de 5 images
+        this.anims.create({
+            key: 'rain',
+            frames: [
+                {key: 'filterRain1'},
+                {key: 'filterRain2'},
+                {key: 'filterRain3'},
+            ],
+            frameRate: 16,
+            repeat: -1
+        });
+        this.filterRain.play('rain');
+        this.filterRain.visible=false
 
 
         //TODO élève faire une animation du même genre que filter mais pour bgAnimationA
@@ -606,6 +621,7 @@ class Tableau1 extends Phaser.Scene
         this.bgAnimation.scrollFactorX=0;
         this.filterBlood.scrollFactorX=0;
         this.filterSnow.scrollFactorX=0;
+        this.filterRain.scrollFactorX=0;
         this.bg2Container.scrollFactorX=0.4;
         this.bg1Container.scrollFactorX=0.8;
         this.groundContainer.scrollFactorX=2;
@@ -627,6 +643,16 @@ class Tableau1 extends Phaser.Scene
                     me.speed=-1;
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N:
+                    me.filterSnow.visible=true
+                    me.filterRain.visible=false
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.P:
+                    me.filterSnow.visible=false
+                    me.filterRain.visible=true
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.S:
+                    me.filterSnow.visible=false
+                    me.filterRain.visible=false
 
                     break;
 
