@@ -22,6 +22,7 @@ class Tableau1 extends Phaser.Scene
         //tout les sons
         this.load.audio('ghost',['assets/son/ghost1.mp3']);
         this.load.audio('bt',['assets/son/soundtrackphaser.mp3']);
+        this.load.audio('scary',['assets/son/scary.mp3']);
 
         //animation maison
         this.load.spritesheet('zombieA', 'assets/zombie/zombie walk/z10A.png',{frameWidth: 99,frameHeight: 170});
@@ -87,6 +88,10 @@ class Tableau1 extends Phaser.Scene
         for(let i=1;i<=5;i++) {
             this.load.image('filterSnow'+i, 'assets/level/weather/snow/frame-'+i+'.png');
         }
+        for(let i=1;i<=11;i++) {
+            this.load.image('screamer'+i, 'assets/scared/frame-'+i+'.gif');
+        }
+
         //animation bg TODO élève : faire une boucle à la place des 3 lignes qui suivent
         for(let i=1;i<=3;i++) {
             this.load.image('bgAnimation'+i, 'assets/level/background-2/bg-animation/bg-animation-'+i+'.png');
@@ -107,6 +112,8 @@ class Tableau1 extends Phaser.Scene
     create(){
         this.ghost1=this.sound.add('ghost',{ loop: false });
         this.ghost1.volume-=0.8
+        this.scary=this.sound.add('scary',{ loop: false });
+
         this.bt=this.sound.add('bt',{ loop: true });
         this.bt.mute= true
         this.bt.play()
@@ -625,6 +632,33 @@ class Tableau1 extends Phaser.Scene
         });
         this.filterRain.play('rain');
         this.filterRain.visible=false;
+        this.screamer = this.add.sprite(0, 0, 'screamer1').setOrigin(0,0);
+        this.screamer.scaleX=1.92
+        this.screamer.scaleY=1.62
+        this.screamer.visible=false
+        //animation de 11 images
+        this.anims.create({
+            key: 'scream',
+            hideOnComplete: true,
+            duration:5,
+            frames: [
+                {key: 'screamer1'},
+                {key: 'screamer2'},
+                {key: 'screamer3'},
+                {key: 'screamer4'},
+                {key: 'screamer5'},
+                {key: 'screamer6'},
+                {key: 'screamer7'},
+                {key: 'screamer8'},
+                {key: 'screamer9'},
+                {key: 'screamer10'},
+                {key: 'screamer11'},
+            ],
+            frameRate: 16,
+            repeat: 2,
+        });
+
+
 
 
 
@@ -648,6 +682,7 @@ class Tableau1 extends Phaser.Scene
         this.filterBlood.scrollFactorX=0;
         this.filterSnow.scrollFactorX=0;
         this.filterRain.scrollFactorX=0;
+        this.screamer.scrollFactorX=0;
         this.bg2Container.scrollFactorX=0.4;
         this.bg1Container.scrollFactorX=0.8;
         this.groundContainer.scrollFactorX=2;
@@ -686,6 +721,11 @@ class Tableau1 extends Phaser.Scene
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.G:
                     me.ghost1.play()
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.A:
+                    me.screamer.visible=true
+                    me.screamer.play('scream');
+                    me.scary.play()
                     break;
 
 
