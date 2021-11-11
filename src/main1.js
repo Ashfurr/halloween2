@@ -3,6 +3,9 @@ let gameConfig = {
     width: 960,
     height: 540,
     backgroundColor: '#ffffff',
+    audio: {
+        disableWebAudio: true
+    },
     parent: 'game',
     physics: {
         default: 'arcade',

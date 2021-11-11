@@ -19,6 +19,11 @@ class Tableau1 extends Phaser.Scene
      * Précharge les assets
      */
     preload(){
+        //tout les sons
+        this.load.audio('ghost',['assets/son/ghost1.mp3']);
+        //animation maison
+        this.load.spritesheet('zombieA', 'assets/zombie/zombie walk/z10A.png',{frameWidth: 99,frameHeight: 170});
+
         //bg 2 (tout au fond et très flou)
         for(let i=1;i<=4;i++) {
             this.load.image('bg2-terrain-' + i, 'assets/level/background-2/bg2-terrain-' + i + '.png');
@@ -60,6 +65,7 @@ class Tableau1 extends Phaser.Scene
         this.load.image('Moon', 'assets/level/background-2/moon.png');
         for(let i=1;i<=16;i++){
             this.load.image('gZ'+i, 'assets/zombie/z'+i+'.png')}
+
         //au lieu d'écrire 5 lignes quasi identiques, on charge l'herbe avec une boucle
         // ALGO : ceci est une boucle
         for(let i=1;i<=5;i++){
@@ -97,6 +103,15 @@ class Tableau1 extends Phaser.Scene
      * TODO élèves : plus tard, continuez le décor vers la droite en vous servant des assets mis à votre disposition
      */
     create(){
+        this.ghost1=this.sound.add('ghost',{ loop: false });
+        this.ghost1.volume-=0.8
+        /**animation zombie*/
+        this.anims.create({
+            key: "zombie",
+            frameRate: 4,
+            frames: this.anims.generateFrameNumbers("zombieA", {start: 0, end:11}),
+            repeat: -1
+        });
 
         /**
          * Fond très clair avec une trame
@@ -377,8 +392,9 @@ class Tableau1 extends Phaser.Scene
          * Zombies
          * @type {Phaser.GameObjects.Image}
          */
-        let gZ21=this.add.image(1500, 390,'gZ10').setOrigin(0,1)
-        this.groundContainer.add(gZ21);
+        let zombieA=this.add.sprite(1500, 390,'zombieA').setOrigin(0,1)
+        zombieA.anims.play("zombie")
+        this.groundContainer.add(zombieA);
 
         /**
          * Terrain 6 //////////////////////////////////////
@@ -602,7 +618,10 @@ class Tableau1 extends Phaser.Scene
             repeat: -1
         });
         this.filterRain.play('rain');
-        this.filterRain.visible=false
+        this.filterRain.visible=false;
+
+
+
 
 
         //TODO élève faire une animation du même genre que filter mais pour bgAnimationA
@@ -653,8 +672,11 @@ class Tableau1 extends Phaser.Scene
                 case Phaser.Input.Keyboard.KeyCodes.S:
                     me.filterSnow.visible=false
                     me.filterRain.visible=false
-
                     break;
+                case Phaser.Input.Keyboard.KeyCodes.G:
+                    me.ghost1.play()
+                    break;
+
 
             }
         });
