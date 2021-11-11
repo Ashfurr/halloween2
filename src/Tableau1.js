@@ -21,6 +21,8 @@ class Tableau1 extends Phaser.Scene
     preload(){
         //tout les sons
         this.load.audio('ghost',['assets/son/ghost1.mp3']);
+        this.load.audio('bt',['assets/son/soundtrackphaser.mp3']);
+
         //animation maison
         this.load.spritesheet('zombieA', 'assets/zombie/zombie walk/z10A.png',{frameWidth: 99,frameHeight: 170});
 
@@ -105,6 +107,10 @@ class Tableau1 extends Phaser.Scene
     create(){
         this.ghost1=this.sound.add('ghost',{ loop: false });
         this.ghost1.volume-=0.8
+        this.bt=this.sound.add('bt',{ loop: true });
+        this.bt.mute= true
+        this.bt.play()
+        this.bt.volume=0.02
         /**animation zombie*/
         this.anims.create({
             key: "zombie",
@@ -632,6 +638,7 @@ class Tableau1 extends Phaser.Scene
          * @type {number}
          */
         this.speed=0;
+        this.start=0;
         //initialise ce qui se passe avec le clavier
         this.initKeyboard();
         // Définit l'espace de déplacement de la caméra
@@ -649,15 +656,19 @@ class Tableau1 extends Phaser.Scene
      * Définit ce qui se passe quand on appuie ou relache une touche du clavier
      * ALGO : ceci est une fonction ou méthode
      */
+
     initKeyboard(){
         let me=this;
+
         this.input.keyboard.on('keydown', function(kevent)
         {
             switch (kevent.keyCode)
             {
                 case Phaser.Input.Keyboard.KeyCodes.RIGHT:
                     me.speed=1;
+                    me.bt.mute=false;
                     break;
+
                 case Phaser.Input.Keyboard.KeyCodes.LEFT:
                     me.speed=-1;
                     break;
@@ -695,7 +706,8 @@ class Tableau1 extends Phaser.Scene
      * Cette fonction s'exécute en boucle (à peu près 60 fois par secondes)
      */
     update(){
-        //déplacement de la caméra
+
+            //déplacement de la caméra
         this.cameras.main.scrollX+=this.speed; // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
 
         //petit effet de vibrance sur le filtre Blood au tout premier plan
