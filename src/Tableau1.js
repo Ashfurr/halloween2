@@ -19,6 +19,16 @@ class Tableau1 extends Phaser.Scene
      * Précharge les assets
      */
     preload(){
+        //caractère
+        for(let i=1;i<=10;i++) {
+            this.load.image('boy_idle'+i,'assets/characters/boy/idle/Layer-'+i+'.png')
+        }
+        for(let i=1;i<=10;i++) {
+            this.load.image('boy_walk'+i,'assets/characters/boy/walk/Layer-'+i+'.png')
+        }
+        for(let i=1;i<=11;i++) {
+            this.load.image('boy_shoot'+i,'assets/characters/boy/shoot/Layer-'+i+'.png')
+        }
         //tout les sons
         this.load.audio('ghost',['assets/son/ghost1.mp3']);
         this.load.audio('bt',['assets/son/soundtrackphaser.mp3']);
@@ -44,6 +54,8 @@ class Tableau1 extends Phaser.Scene
         for(let i=1;i<=5;i++) {
             this.load.image('bg-grass-' + i, 'assets/level/background-1/bg-grass-' + i + '.png');
         }
+
+
         this.load.image('bgTreef', 'assets/level/background-1/bg-fellen-tree-1.png');
         this.load.image('bgTreef2', 'assets/level/background-1/bg-fellen-tree-2.png');
         //ground (premier plan noir)
@@ -103,7 +115,13 @@ class Tableau1 extends Phaser.Scene
         }
 
     }
-
+    getFrames(prefix,length){
+        let frames=[];
+        for (let i=1;i<=length;i++){
+            frames.push({key: prefix+i});
+        }
+        return frames;
+    }
     /**
      * Crée la scène
      * TODO élèves : reproduire à l'identique assets/level/00-preview-example/sample1.jpg
@@ -121,7 +139,7 @@ class Tableau1 extends Phaser.Scene
         /**animation zombie*/
         this.anims.create({
             key: "zombie",
-            frameRate: 4,
+            frameRate: 5,
             frames: this.anims.generateFrameNumbers("zombieA", {start: 0, end:11}),
             repeat: -1
         });
@@ -304,7 +322,7 @@ class Tableau1 extends Phaser.Scene
         vine8.angle+=5
         this.groundContainer.add(vine8);
 
-
+        console.log("a");
 
         /**
          * Zombies
@@ -348,6 +366,47 @@ class Tableau1 extends Phaser.Scene
         //ici on va calculer les positions
         let gMid1=this.add.image(0,350, 'gMid').setOrigin(0,0);
         this.groundContainer.add(gMid1);
+        console.log("b");
+
+        this.boy_idle = this.add.sprite(100, 170, 'boy_idle1').setOrigin(0, 0);
+        this.anims.create({
+            key: 'idle',
+            frames: this.getFrames('boy_idle',10),
+            frameRate: 12,
+            repeat: -1
+        });
+        this.boy_idle.play('idle');
+        this.boy_idle.scale=0.5
+
+
+        this.boy_walk = this.add.sprite(100, 170, 'boy_walk1').setOrigin(0, 0);
+        //animation de 5 images
+        this.anims.create({
+            key: 'walk',
+            frames: this.getFrames('boy_walk',10),
+            frameRate: 24,
+            repeat: -1
+        });
+        this.boy_walk.play('walk');
+        this.boy_walk.scale=0.5
+        this.boy_walk.visible=false
+
+        this.boy_shoot = this.add.sprite(100, 170, 'boy_shoot1').setOrigin(0, 0);
+        this.boy_shoot.visible=false
+        //animation de 5 images
+        this.anims.create({
+            key: 'shoot',
+            frames: this.getFrames('boy_shoot',11),
+            frameRate: 24,
+            repeat: 1,
+            showOnStart:false,
+            hideOnComplete:true,
+        });
+        this.boy_shoot.scale=0.5
+
+
+
+
         /**
          * Terrain 2
          * @type {Phaser.GameObjects.Image}
@@ -380,7 +439,7 @@ class Tableau1 extends Phaser.Scene
         gSpike2.scaleX+=0.1
         this.groundContainer.add(gSpike2);
 
-
+        console.log("d");
         /**
          * Terrain 3 //////////////////////////////////////
          * @type {Phaser.GameObjects.Image}
@@ -592,11 +651,7 @@ class Tableau1 extends Phaser.Scene
         //animation de 3 images
         this.anims.create({
             key: 'blood',
-            frames: [
-                {key:'filterBlood1'},
-                {key:'filterBlood2'},
-                {key:'filterBlood3'},
-            ],
+            frames: this.getFrames('filterBlood',3),
             frameRate: 16,
             repeat: -1
         });
@@ -606,13 +661,7 @@ class Tableau1 extends Phaser.Scene
             //animation de 5 images
         this.anims.create({
                 key: 'snow',
-                frames: [
-                    {key: 'filterSnow1'},
-                    {key: 'filterSnow2'},
-                    {key: 'filterSnow3'},
-                    {key: 'filterSnow4'},
-                    {key: 'filterSnow5'},
-                ],
+                frames: this.getFrames('filterSnow',5),
                 frameRate: 24,
                 repeat: -1
             });
@@ -622,11 +671,7 @@ class Tableau1 extends Phaser.Scene
         //animation de 5 images
         this.anims.create({
             key: 'rain',
-            frames: [
-                {key: 'filterRain1'},
-                {key: 'filterRain2'},
-                {key: 'filterRain3'},
-            ],
+            frames: this.getFrames('filterRain',3),
             frameRate: 16,
             repeat: -1
         });
@@ -641,19 +686,7 @@ class Tableau1 extends Phaser.Scene
             key: 'scream',
             hideOnComplete: true,
             duration:5,
-            frames: [
-                {key: 'screamer1'},
-                {key: 'screamer2'},
-                {key: 'screamer3'},
-                {key: 'screamer4'},
-                {key: 'screamer5'},
-                {key: 'screamer6'},
-                {key: 'screamer7'},
-                {key: 'screamer8'},
-                {key: 'screamer9'},
-                {key: 'screamer10'},
-                {key: 'screamer11'},
-            ],
+            frames: this.getFrames('screamer',11),
             frameRate: 16,
             repeat: 2,
         });
@@ -672,6 +705,7 @@ class Tableau1 extends Phaser.Scene
          * @type {number}
          */
         this.speed=0;
+        this.boy_walk.speed=0
         this.start=0;
         //initialise ce qui se passe avec le clavier
         this.initKeyboard();
@@ -702,9 +736,20 @@ class Tableau1 extends Phaser.Scene
                 case Phaser.Input.Keyboard.KeyCodes.RIGHT:
                     me.speed=1;
                     me.bt.mute=false;
+                    me.boy_idle.visible=false
+                    me.boy_walk.visible=true
+                    me.boy_walk.speed=2
+                    me.boy_idle.flipX=true
+                    me.boy_walk.flipX=false
+                    console.log(me.boy_walk.speed)
                     break;
 
                 case Phaser.Input.Keyboard.KeyCodes.LEFT:
+                    me.boy_idle.visible=false
+                    me.boy_walk.visible=true
+                    me.boy_walk.flipX=true
+                    me.boy_idle.flipX=true
+                    me.boy_walk.speed=-2
                     me.speed=-1;
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N:
@@ -727,6 +772,9 @@ class Tableau1 extends Phaser.Scene
                     me.screamer.play('scream');
                     me.scary.play()
                     break;
+                case Phaser.Input.Keyboard.KeyCodes.Q:
+                    me.boy_shoot.visible=true
+                    me.boy_shoot.play()
 
 
             }
@@ -736,7 +784,17 @@ class Tableau1 extends Phaser.Scene
             switch (kevent.keyCode)
             {
                 case Phaser.Input.Keyboard.KeyCodes.RIGHT:
+                    me.boy_walk.visible=false
+                    me.boy_walk.speed=0
+                    me.boy_idle.visible=true
+                    me.boy_walk.flipX=false
+                    me.boy_idle.flipX=false
+                    me.speed=0;
+                    break;
                 case Phaser.Input.Keyboard.KeyCodes.LEFT:
+                    me.boy_walk.visible=false
+                    me.boy_walk.speed=0
+                    me.boy_idle.visible=true
                     me.speed=0;
                     break;
             }
@@ -748,7 +806,11 @@ class Tableau1 extends Phaser.Scene
     update(){
 
             //déplacement de la caméra
-        this.cameras.main.scrollX+=this.speed; // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
+        this.boy_walk.x+=this.boy_walk.speed;
+        this.boy_idle.x=this.boy_walk.x;
+        this.boy_shoot.x=this.boy_walk.x
+        this.cameras.main.startFollow(this.boy_walk) // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
+
 
         //petit effet de vibrance sur le filtre Blood au tout premier plan
         this.filterBlood.setAlpha(Phaser.Math.Between(95,100)/100)
