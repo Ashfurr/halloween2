@@ -115,6 +115,7 @@ class Tableau1 extends Phaser.Scene
         }
 
     }
+
     getFrames(prefix,length){
         let frames=[];
         for (let i=1;i<=length;i++){
@@ -720,6 +721,7 @@ class Tableau1 extends Phaser.Scene
         this.bg2Container.scrollFactorX=0.4;
         this.bg1Container.scrollFactorX=0.8;
         this.groundContainer.scrollFactorX=2;
+        this.cameras.main.startFollow(this.boy_walk)
     }
     /**
      * Définit ce qui se passe quand on appuie ou relache une touche du clavier
@@ -809,7 +811,7 @@ class Tableau1 extends Phaser.Scene
         this.boy_walk.x+=this.boy_walk.speed;
         this.boy_idle.x=this.boy_walk.x;
         this.boy_shoot.x=this.boy_walk.x
-        this.cameras.main.startFollow(this.boy_walk) // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
+         // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
 
 
         //petit effet de vibrance sur le filtre Blood au tout premier plan
