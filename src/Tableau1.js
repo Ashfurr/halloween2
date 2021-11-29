@@ -129,6 +129,7 @@ class Tableau1 extends Phaser.Scene
      * TODO élèves : plus tard, continuez le décor vers la droite en vous servant des assets mis à votre disposition
      */
     create(){
+        this.physics.arcade.gravity.y = 100;
         this.ghost1=this.sound.add('ghost',{ loop: false });
         this.ghost1.volume-=0.8
         this.scary=this.sound.add('scary',{ loop: false });
@@ -378,6 +379,11 @@ class Tableau1 extends Phaser.Scene
         });
         this.boy_idle.play('idle');
         this.boy_idle.scale=0.5
+        game.physics.enable( [boy_idle], Phaser.Physics.ARCADE);
+        boy_idle.body.collideWorldBounds = true;
+        boy_idle.body.bounce.y = 0.8;
+
+
 
 
         this.boy_walk = this.add.sprite(100, 170, 'boy_walk1').setOrigin(0, 0);
