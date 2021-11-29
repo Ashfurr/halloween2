@@ -129,7 +129,6 @@ class Tableau1 extends Phaser.Scene
      * TODO élèves : plus tard, continuez le décor vers la droite en vous servant des assets mis à votre disposition
      */
     create(){
-        this.physics.arcade.gravity.y = 100;
         this.ghost1=this.sound.add('ghost',{ loop: false });
         this.ghost1.volume-=0.8
         this.scary=this.sound.add('scary',{ loop: false });
@@ -366,11 +365,11 @@ class Tableau1 extends Phaser.Scene
          * @type {Phaser.GameObjects.Image}
          */
         //ici on va calculer les positions
-        let gMid1=this.add.image(0,350, 'gMid').setOrigin(0,0);
+        let gMid1=this.physics.add.sprite(0,350, 'gMid').setOrigin(0,0);
         this.groundContainer.add(gMid1);
-        console.log("b");
+        gMid1.body.allowGravity=false
 
-        this.boy_idle = this.add.sprite(100, 170, 'boy_idle1').setOrigin(0, 0);
+        this.boy_idle = this.physics.add.sprite(100, 160, 'boy_idle1').setOrigin(0, 0);
         this.anims.create({
             key: 'idle',
             frames: this.getFrames('boy_idle',10),
@@ -379,14 +378,17 @@ class Tableau1 extends Phaser.Scene
         });
         this.boy_idle.play('idle');
         this.boy_idle.scale=0.5
-        game.physics.enable( [boy_idle], Phaser.Physics.ARCADE);
-        boy_idle.body.collideWorldBounds = true;
-        boy_idle.body.bounce.y = 0.8;
+        this.boy_idle.body.setSize(100,250)
+        this.boy_idle.setGravityY(100)
+        this.physics.add.collider(this.boy_idle,gMid1)
+        gMid1.setImmovable();
 
 
 
 
-        this.boy_walk = this.add.sprite(100, 170, 'boy_walk1').setOrigin(0, 0);
+
+
+        this.boy_walk = this.physics.add.sprite(this.boy_idle.x, this.boy_idle.y, 'boy_walk1').setOrigin(0, 0);
         //animation de 5 images
         this.anims.create({
             key: 'walk',
@@ -396,7 +398,11 @@ class Tableau1 extends Phaser.Scene
         });
         this.boy_walk.play('walk');
         this.boy_walk.scale=0.5
+        this.boy_walk.body.setSize(100,250)
         this.boy_walk.visible=false
+        this.boy_walk.setGravityY(100)
+        this.physics.add.collider(this.boy_walk,gMid1)
+
 
         this.boy_shoot = this.add.sprite(100, 170, 'boy_shoot1').setOrigin(0, 0);
         this.boy_shoot.visible=false
@@ -419,20 +425,28 @@ class Tableau1 extends Phaser.Scene
          * @type {Phaser.GameObjects.Image}
          */
             //ici on va calculer les positions
-        let gMid2=this.add.image(200,350, 'gMid').setOrigin(0,0);
+        let gMid2=this.physics.add.sprite(200,350, 'gMid').setOrigin(0,0);
         this.groundContainer.add(gMid2);
+        this.physics.add.collider(this.boy_idle,gMid2)
+        this.physics.add.collider(this.boy_walk,gMid2)
+        gMid2.setImmovable();
         /**
          *  Terrain eau
          * @type {Phaser.GameObjects.Image}
          */
-        let gWater=this.add.image(gMid2.x+gMid2.width+90,410, 'gWater').setOrigin(0,0);
+        let gWater=this.physics.add.sprite(gMid2.x+gMid2.width+90,410, 'gWater').setOrigin(0,0);
         this.groundContainer.add(gWater);
+        this.physics.add.collider(this.boy_idle,gWater)
+        this.physics.add.collider(this.boy_walk,gWater)
+        gWater.setImmovable();
         /**
          *  Terrain eau
          * @type {Phaser.GameObjects.Image}
          */
-        let gWater2=this.add.image(gWater.x+gWater.width,410, 'gWater').setOrigin(0,0);
+        let gWater2=this.physics.add.sprite(gWater.x+gWater.width,410, 'gWater').setOrigin(0,0);
         this.groundContainer.add(gWater2);
+        this.physics.add.collider(this.boy_idle,gWater2)
+        this.physics.add.collider(this.boy_walk,gWater2)
         /**
          * Des spike au fond de l'eau
          * @type {Phaser.GameObjects.image}
@@ -451,7 +465,7 @@ class Tableau1 extends Phaser.Scene
          * Terrain 3 //////////////////////////////////////
          * @type {Phaser.GameObjects.Image}
          */
-        let gRight=this.add.image(gMid2.x+gMid2.width-100,350, 'gRight').setOrigin(0,0);
+        let gRight=this.physics.add.sprite(gMid2.x+gMid2.width-100,350, 'gRight').setOrigin(0,0);
         this.groundContainer.add(gRight);
 
 
@@ -459,13 +473,13 @@ class Tableau1 extends Phaser.Scene
          * Terrain 4 //////////////////////////////////////
          * @type {Phaser.GameObjects.Image}
          */
-        let gLeft=this.add.image(gWater.x+gWater.width+40,390, 'gLeft').setOrigin(0,0);
+        let gLeft=this.physics.add.sprite(gWater.x+gWater.width+40,390, 'gLeft').setOrigin(0,0);
         this.groundContainer.add(gLeft);
         /**
          * Terrain 5 //////////////////////////////////////
          * @type {Phaser.GameObjects.Image}
          */
-        let gMid3=this.add.image(gLeft.x+gLeft.width,390, 'gMid').setOrigin(0,0);
+        let gMid3=this.physics.add.sprite(gLeft.x+gLeft.width,390, 'gMid').setOrigin(0,0);
         this.groundContainer.add(gMid3);
         /**
          * Zombies
@@ -749,7 +763,17 @@ class Tableau1 extends Phaser.Scene
                     me.boy_walk.speed=2
                     me.boy_idle.flipX=true
                     me.boy_walk.flipX=false
-                    console.log(me.boy_walk.speed)
+                    console.log(me.boy_idle.x)
+                    console.log(me.boy_idle.y)
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.UP:
+                    me.boy_idle.setGravityY(-400)
+                    me.boy_walk.setGravityY(-400)
+
+                    break;
+                case Phaser.Input.Keyboard.KeyCodes.DOWN:
+                    me.boy_walk.setGravityY(400)
+                    me.boy_idle.setGravityY(400)
                     break;
 
                 case Phaser.Input.Keyboard.KeyCodes.LEFT:
@@ -759,6 +783,8 @@ class Tableau1 extends Phaser.Scene
                     me.boy_idle.flipX=true
                     me.boy_walk.speed=-2
                     me.speed=-1;
+                    console.log(me.boy_idle.x)
+                    console.log(me.boy_idle.y)
                     break;
                 case Phaser.Input.Keyboard.KeyCodes.N:
                     me.filterSnow.visible=true
@@ -813,9 +839,11 @@ class Tableau1 extends Phaser.Scene
      */
     update(){
 
+
             //déplacement de la caméra
         this.boy_walk.x+=this.boy_walk.speed;
         this.boy_idle.x=this.boy_walk.x;
+
         this.boy_shoot.x=this.boy_walk.x
          // on aurait pu écrire : this.cameras.main.scrollX= this.cameras.main.scrollX + this.speed;
 
